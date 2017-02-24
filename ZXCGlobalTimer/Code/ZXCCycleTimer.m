@@ -110,7 +110,7 @@ static ZXCCycleTimer * shareObj = nil;
         
         _randPool  = [[NSMutableArray alloc]init];
         
-        for (int i = 1 ; i < 10000; i++) {
+        for (int i = 1 ; i < 500; i++) {
             [_randPool addObject:@(i)];
         }
     }
