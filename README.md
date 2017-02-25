@@ -7,7 +7,7 @@ ZXCGlobalTimer是一个全局的定时计时器,能够一行代码添加定时�
 ###下载&使用
 
 1.直接将目录下'ZXCGlobalTimer'文件夹引入工程中,并且引入ZXCGlobalTimer.h头文件
-
+2.使用CocoaPods:Pod 'ZXCGlobalTimer'
 
 
 ###方法
