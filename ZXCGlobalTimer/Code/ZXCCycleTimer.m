@@ -173,8 +173,12 @@ NSInteger randPoolMaxNum = 200;
             if ([queue.target respondsToSelector:queue.selector]) {
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     
                     [queue.target performSelector:queue.selector withObject:queue.param1 withObject:queue.param2];
+#pragma clang diagnostic pop
                     
                 });
                 

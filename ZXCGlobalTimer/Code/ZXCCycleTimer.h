@@ -17,6 +17,8 @@
 
 +(instancetype)shareInstance;
 
+
+
 #pragma mark - 循环任务
 
 /**
