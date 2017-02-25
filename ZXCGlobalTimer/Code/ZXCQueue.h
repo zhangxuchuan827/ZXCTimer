@@ -34,16 +34,7 @@
 @property (assign,nonatomic) NSInteger  index;
 
 
-/**
- 参数一
- */
-@property (assign,nonatomic) id  param1;
 
-
-/**
- 参数二
- */
-@property (assign,nonatomic) id  param2;
 
 
 @end

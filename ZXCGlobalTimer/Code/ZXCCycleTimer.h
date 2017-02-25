@@ -30,28 +30,6 @@
  */
 -(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector;
 
-/**
- 添加事件到轮询队列
-
- @param target 控制器
- @param selector 执行方法
- @param obj 参数
- @return 队列索引
- */
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam:(id)obj;
-
-
-/**
- 添加时间到轮询队列
-
- @param target 控制器
- @param selector 执行方法
- @param obj1 参数一
- @param obj2 参数二
- @return 队列索引
- */
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam1:(id)obj1 Param2:(id)obj2;
-
 
 /**
  添加回调到轮询队列(block将在主线程中执行)

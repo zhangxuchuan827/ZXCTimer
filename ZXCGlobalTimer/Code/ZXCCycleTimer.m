@@ -174,11 +174,8 @@ NSInteger randPoolMaxNum = 200;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                     
-                    [queue.target performSelector:queue.selector withObject:queue.param1 withObject:queue.param2];
-#pragma clang diagnostic pop
+                    ((void (*)(id, SEL))[queue.target methodForSelector:queue.selector])(queue.target,queue.selector);
                     
                 });
                 
@@ -220,17 +217,8 @@ NSInteger randPoolMaxNum = 200;
     
 }
 
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector{
-    
-    return [self addQueueWithTarget:target selector:selector withParam1:nil Param2:nil];
-    
-}
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam:(id)obj{
 
-    return [self addQueueWithTarget:target selector:selector withParam1:obj Param2:nil];
-    
-}
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam1:(id)obj1 Param2:(id)obj2{
+-(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector{
 
     NSAssert(target, @"执行主体不能为空");
     NSAssert(selector , @"事件不能为空");
@@ -248,9 +236,7 @@ NSInteger randPoolMaxNum = 200;
             ZXCQueue * inQueue = obj;
             
             if (inQueue.selector == selector &&
-                inQueue.target   == target   &&
-                inQueue.param1   == obj1     &&
-                inQueue.param2   == obj2) {
+                inQueue.target   == target   ) {
                 
                 havedIndex = inQueue.index;
                 
@@ -282,9 +268,6 @@ NSInteger randPoolMaxNum = 200;
     
     queue.target = weakTarget;
     
-    queue.param1 = obj1;
-    
-    queue.param2 = obj2;
 
     
     [self.cycleQueueDict setObject:queue forKey:@(index)];

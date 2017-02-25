@@ -21,10 +21,6 @@ ZXCGlobalTimer是一个全局的定时计时器,能够一行代码添加定时�
 
 -(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector;
 
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam:(id)obj;
-
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector withParam1:(id)obj1 Param2:(id)obj2;
-
 -(NSInteger)addQueueWithBlock:(void(^)(NSInteger queueId))calBack;
 
 3.移除本控制器的所有事件(仅target-Selecter事件)
@@ -60,10 +56,6 @@ ZXCGlobalTimer是一个全局的定时计时器,能够一行代码添加定时�
     //添加轮询队列
     
     NSInteger index = [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test1)];
-    
-    [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test2_WithParam:) withParam:@"我是参数"];
-    
-    [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test3_WithParam:Param2:) withParam1:@"参数1" Param2:@"参数2"];
     
     [[ZXCCycleTimer shareInstance] addQueueWithBlock:^(NSInteger queueId) {
         

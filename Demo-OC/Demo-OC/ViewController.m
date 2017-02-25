@@ -25,15 +25,13 @@
     
     NSInteger index = [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test1)];
     
-    [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test2_WithParam:) withParam:@"我是参数"];
+
     
-    [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test3_WithParam:Param2:) withParam1:@"参数1" Param2:@"参数2"];
-    
-//    [[ZXCCycleTimer shareInstance] addQueueWithBlock:^(NSInteger queueId) {
-//        
-//        NSLog(@"定时器调用了block,当前索引值:%ld",queueId);
-//        
-//    }];
+    [[ZXCCycleTimer shareInstance] addQueueWithBlock:^(NSInteger queueId) {
+        
+        NSLog(@"定时器调用了block,当前索引值:%ld",queueId);
+        
+    }];
     
     //移除定时器
     [[ZXCCycleTimer shareInstance]removeByIndex:index];
