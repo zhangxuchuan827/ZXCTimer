@@ -17,7 +17,6 @@
 
 +(instancetype)shareInstance;
 
--(void)test;
 #pragma mark - 循环任务
 
 /**
