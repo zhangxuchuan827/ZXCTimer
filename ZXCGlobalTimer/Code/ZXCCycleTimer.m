@@ -53,6 +53,7 @@ static ZXCCycleTimer * shareObj = nil;
        
         shareObj = [[ZXCCycleTimer alloc]init];
         
+        
     });
     
     return  shareObj;
@@ -75,6 +76,7 @@ static ZXCCycleTimer * shareObj = nil;
 
 -(void)initial{
     
+    NSLog(@"%@\n%@",[NSRunLoop currentRunLoop],[NSThread currentThread]);
     
     //循环时间
     _timeInterval = 1;
@@ -85,37 +87,10 @@ static ZXCCycleTimer * shareObj = nil;
     
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
     
-    
-    //监听队列,如果两个队列都没有任务就停掉timer
-    
-#error KVO不起作用
-    [self addObserver:self forKeyPath:@"cycleQueueDict" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld|NSKeyValueObservingOptionInitial context:NULL];
-    
-    [self addObserver:self forKeyPath:@"countingQueueDict" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld|NSKeyValueObservingOptionInitial context:NULL];
-    
-    
     [[NSRunLoop currentRunLoop]run];
- 
 
-
-    
-   
 
 }
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
-    
-//    if (self.cycleQueueDict.count == 0 && self.countingQueueDict.count == 0) {
-//        
-//        [_timer setFireDate:[NSDate distantFuture ]];
-//        
-//    }else{
-//        
-//        [_timer setFireDate:[NSDate distantPast]];
-//    }
-    
-}
-
 
 
 
