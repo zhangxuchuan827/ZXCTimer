@@ -53,6 +53,8 @@
     //取消该任务
     [[ZXCCycleTimer shareInstance]cancelCountDownWithIndex:index2];
     
+    [[ZXCCycleTimer shareInstance]cancelAllCountDownTask];
+    
     
 }
 
@@ -84,6 +86,8 @@
 - (IBAction)add:(id)sender {
     
     [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test1)];
+    
+
     
 }
 

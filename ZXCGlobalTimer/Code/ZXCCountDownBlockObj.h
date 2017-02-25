@@ -1,8 +1,8 @@
 //
-//  ZXCCountDownObj.h
-//  ZXCGlobalTimer
+//  ZXCCountDownBlockObj.h
+//  ZXCGlobalTimer-OC
 //
-//  Created by LanTuZi on 17/2/23.
+//  Created by 张绪川 on 17/2/25.
 //  Copyright © 2017年 张绪川. All rights reserved.
 //
 
@@ -10,10 +10,9 @@
 
 
 /**
- 定时器对象
+ 定时器对象block
  */
-@interface ZXCCountDownObj : NSObject
-
+@interface ZXCCountDownBlockObj : NSObject
 
 /**
  索引值
@@ -37,6 +36,7 @@
  结束时间
  */
 @property (nonatomic,strong) NSDate * endDate;
+
 
 
 @end

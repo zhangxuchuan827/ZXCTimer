@@ -17,7 +17,7 @@
 
 +(instancetype)shareInstance;
 
-
+-(void)test;
 #pragma mark - 循环任务
 
 /**
@@ -86,11 +86,10 @@
  添加一个定时任务(block)
 
  @param timeInterval 定时时长
- @param endBlock 结束回调
+ @param endBlock 结束回调(主线程中执行)
  @return 定时任务索引值
  */
 -(NSInteger)addCountDownWithTimeInterval:(NSTimeInterval)timeInterval endBlock:(void(^)())endBlock;
-
 
 
 /**
@@ -99,6 +98,13 @@
  @param index 任务索引值
  */
 -(void)cancelCountDownWithIndex:(NSInteger)index;
+
+
+/**
+ 取消所有定时任务
+ */
+-(void)cancelAllCountDownTask;
+
 
 
 @end

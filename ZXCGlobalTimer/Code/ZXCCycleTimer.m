@@ -11,7 +11,7 @@
 #import "ZXCQueue.h"
 #import "ZXCBlockQueue.h"
 
-#import "ZXCCountDownObj.h"
+#import "ZXCCountDownBlockObj.h"
 
 @interface ZXCCycleTimer ()
 
@@ -76,8 +76,6 @@ static ZXCCycleTimer * shareObj = nil;
 
 -(void)initial{
     
-    NSLog(@"%@\n%@",[NSRunLoop currentRunLoop],[NSThread currentThread]);
-    
     //循环时间
     _timeInterval = 1;
     
@@ -94,12 +92,12 @@ static ZXCCycleTimer * shareObj = nil;
 
 
 
+
 /**
  定时器循环事件
  */
 -(void)timerRun{
     
-    //[self observeValueForKeyPath:nil ofObject:nil change:nil context:NULL];
     
     [self run_cycle];
     
@@ -110,15 +108,28 @@ static ZXCCycleTimer * shareObj = nil;
 }
 
 
+NSInteger randPoolMaxNum = 200;
+
+
 -(NSMutableArray*)randPool{
     
     if (_randPool == nil) {
         
         _randPool  = [[NSMutableArray alloc]init];
         
-        for (int i = 1 ; i < 500; i++) {
+        for (int i = 1 ; i < randPoolMaxNum; i++) {
+            
             [_randPool addObject:@(i)];
+            
+            
+            
         }
+    }
+    
+    if (_randPool.count == 0) {
+        
+        [_randPool addObject:@(++randPoolMaxNum)];
+        
     }
     
     return _randPool;
@@ -176,7 +187,8 @@ static ZXCCycleTimer * shareObj = nil;
             
             
         }
-        else if ([obj isKindOfClass:[ZXCBlockQueue class]]){
+        
+        if ([obj isKindOfClass:[ZXCBlockQueue class]]){
             
             ZXCBlockQueue * queue = obj;
             
@@ -315,7 +327,7 @@ static ZXCCycleTimer * shareObj = nil;
             
         }
         
-        
+
         
     }];
     
@@ -341,41 +353,48 @@ static ZXCCycleTimer * shareObj = nil;
     __block NSMutableArray * needCancalKey = [NSMutableArray new];
     
     [self.countingQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        //
         
-        ZXCCountDownObj * coutting = obj;
+            
+        ZXCCountDownBlockObj * coutting = obj;
         
         //判断如果block失效,取消任务
         if(coutting.endBlock){
             
             [needCancalKey addObject:key];
             
-            return ;
-        }
-        
-        //判断如果当前的时间大于或等于结束时间
-        
-        NSDate * currentDate = [NSDate date];
-        NSDate * endDate = coutting.endDate;
-        //判断时间
-        if([currentDate compare:endDate] == NSOrderedSame || [currentDate compare:endDate] == NSOrderedDescending){
             
-            //执行目标的block
-            if (coutting.endBlock) {
+        }else{
+        
+            //判断如果当前的时间大于或等于结束时间
+            
+            NSDate * currentDate = [NSDate date];
+            NSDate * endDate = coutting.endDate;
+            //判断时间
+            if([currentDate compare:endDate] == NSOrderedSame || [currentDate compare:endDate] == NSOrderedDescending){
+                
+                //执行目标的block
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     coutting.endBlock();
                     
                 });
+                    
+                
+                
+                //添加到待取消任务数组--无论执行成功与否,到时就取消
+                
+                [needCancalKey addObject:key];
+                
                 
             }
-            
-            //添加到待取消任务数组--无论执行成功与否,到时就取消
-            
-            [needCancalKey addObject:key];
-            
-            
+                
         }
+        
+        
+        
+        
         
         
         
@@ -388,7 +407,7 @@ static ZXCCycleTimer * shareObj = nil;
         
         [self cancelCountDownWithIndex:[key integerValue]];
         
-        
+        [self reductionRandPoolWithIndex:key.integerValue];
     }
     
 }
@@ -397,7 +416,7 @@ static ZXCCycleTimer * shareObj = nil;
     
     NSInteger index = [self randNumNotInIndex];
     
-    ZXCCountDownObj * obj = [ZXCCountDownObj new];
+    ZXCCountDownBlockObj * obj = [ZXCCountDownBlockObj new];
     
     obj.createDate = [NSDate date];
     
@@ -413,6 +432,8 @@ static ZXCCycleTimer * shareObj = nil;
     
 }
 
+
+
 -(void)cancelCountDownWithIndex:(NSInteger)index{
     
     BOOL result = [self.countingQueueDict.allKeys containsObject:@(index)];
@@ -424,6 +445,19 @@ static ZXCCycleTimer * shareObj = nil;
         [self reductionRandPoolWithIndex:index];
         
     }
+    
+}
+
+-(void)cancelAllCountDownTask{
+    
+    for (NSString * key in self.countingQueueDict.allKeys) {
+        
+        [self.countingQueueDict removeObjectForKey:key];
+        
+    }
+    
+    [self reductionRandPoolWithIndexArray:self.countingQueueDict.allKeys];
+    
     
 }
 
@@ -458,16 +492,17 @@ static ZXCCycleTimer * shareObj = nil;
     
 }
 
-
-#pragma mark - 其他
-
--(void)dealloc{
+/**
+ 还原随机数池
+ */
+-(void)reductionRandPoolWithIndexArray:(NSArray *)array{
     
-    [self removeObserver:self forKeyPath:@"countingQueueDict"];
-    
-    [self removeObserver:self forKeyPath:@"cycleQueueDict"];
-    
+    [self.randPool addObjectsFromArray:array];
 }
+
+
+
+
 
 
 

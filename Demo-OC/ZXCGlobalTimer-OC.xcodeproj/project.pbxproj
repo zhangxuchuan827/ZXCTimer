@@ -15,9 +15,9 @@
 		C7E8A8081E5EE650001E1CFC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7E8A8061E5EE650001E1CFC /* LaunchScreen.storyboard */; };
 		C7E8A8131E5EE651001E1CFC /* Demo_OCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8121E5EE651001E1CFC /* Demo_OCTests.m */; };
 		C7E8A8461E5EEC12001E1CFC /* ZXCBlockQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A83E1E5EEC12001E1CFC /* ZXCBlockQueue.m */; };
-		C7E8A8471E5EEC12001E1CFC /* ZXCCountDownObj.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8401E5EEC12001E1CFC /* ZXCCountDownObj.m */; };
 		C7E8A8481E5EEC12001E1CFC /* ZXCCycleTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8421E5EEC12001E1CFC /* ZXCCycleTimer.m */; };
 		C7E8A8491E5EEC12001E1CFC /* ZXCQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8441E5EEC12001E1CFC /* ZXCQueue.m */; };
+		F36873DC1E61860300F3A862 /* ZXCCountDownBlockObj.m in Sources */ = {isa = PBXBuildFile; fileRef = F36873DB1E61860300F3A862 /* ZXCCountDownBlockObj.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,13 +46,13 @@
 		C7E8A8141E5EE651001E1CFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7E8A83D1E5EEC12001E1CFC /* ZXCBlockQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCBlockQueue.h; sourceTree = "<group>"; };
 		C7E8A83E1E5EEC12001E1CFC /* ZXCBlockQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCBlockQueue.m; sourceTree = "<group>"; };
-		C7E8A83F1E5EEC12001E1CFC /* ZXCCountDownObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCCountDownObj.h; sourceTree = "<group>"; };
-		C7E8A8401E5EEC12001E1CFC /* ZXCCountDownObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCCountDownObj.m; sourceTree = "<group>"; };
 		C7E8A8411E5EEC12001E1CFC /* ZXCCycleTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCCycleTimer.h; sourceTree = "<group>"; };
 		C7E8A8421E5EEC12001E1CFC /* ZXCCycleTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCCycleTimer.m; sourceTree = "<group>"; };
 		C7E8A8431E5EEC12001E1CFC /* ZXCQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCQueue.h; sourceTree = "<group>"; };
 		C7E8A8441E5EEC12001E1CFC /* ZXCQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCQueue.m; sourceTree = "<group>"; };
 		C7E8A8451E5EEC12001E1CFC /* ZXCGlobalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCGlobalTimer.h; sourceTree = "<group>"; };
+		F36873DA1E61860300F3A862 /* ZXCCountDownBlockObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCCountDownBlockObj.h; sourceTree = "<group>"; };
+		F36873DB1E61860300F3A862 /* ZXCCountDownBlockObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCCountDownBlockObj.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,8 +140,8 @@
 			children = (
 				C7E8A83D1E5EEC12001E1CFC /* ZXCBlockQueue.h */,
 				C7E8A83E1E5EEC12001E1CFC /* ZXCBlockQueue.m */,
-				C7E8A83F1E5EEC12001E1CFC /* ZXCCountDownObj.h */,
-				C7E8A8401E5EEC12001E1CFC /* ZXCCountDownObj.m */,
+				F36873DA1E61860300F3A862 /* ZXCCountDownBlockObj.h */,
+				F36873DB1E61860300F3A862 /* ZXCCountDownBlockObj.m */,
 				C7E8A8411E5EEC12001E1CFC /* ZXCCycleTimer.h */,
 				C7E8A8421E5EEC12001E1CFC /* ZXCCycleTimer.m */,
 				C7E8A8431E5EEC12001E1CFC /* ZXCQueue.h */,
@@ -253,11 +253,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F36873DC1E61860300F3A862 /* ZXCCountDownBlockObj.m in Sources */,
 				C7E8A8491E5EEC12001E1CFC /* ZXCQueue.m in Sources */,
 				C7E8A8001E5EE650001E1CFC /* ViewController.m in Sources */,
 				C7E8A7FD1E5EE650001E1CFC /* AppDelegate.m in Sources */,
 				C7E8A8481E5EEC12001E1CFC /* ZXCCycleTimer.m in Sources */,
-				C7E8A8471E5EEC12001E1CFC /* ZXCCountDownObj.m in Sources */,
 				C7E8A7FA1E5EE650001E1CFC /* main.m in Sources */,
 				C7E8A8461E5EEC12001E1CFC /* ZXCBlockQueue.m in Sources */,
 			);
