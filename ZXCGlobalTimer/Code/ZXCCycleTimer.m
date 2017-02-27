@@ -108,7 +108,7 @@ static ZXCCycleTimer * shareObj = nil;
 }
 
 
-NSInteger randPoolMaxNum = 200;
+NSInteger randPoolMaxNum = 100;
 
 
 -(NSMutableArray*)randPool{
