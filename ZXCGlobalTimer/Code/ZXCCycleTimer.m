@@ -196,7 +196,10 @@ NSInteger randPoolMaxNum = 100;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    queue.callBack(queue.index);
+                    @try{
+                        queue.callBack(queue.index);
+                    }
+                    
                 });
                 
                 
@@ -363,7 +366,9 @@ NSInteger randPoolMaxNum = 100;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
-                    coutting.endBlock();
+                    @try{
+                        coutting.endBlock();
+                    }
                     
                 });
                     
