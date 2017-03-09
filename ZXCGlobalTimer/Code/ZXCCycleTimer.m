@@ -441,13 +441,15 @@ NSInteger randPoolMaxNum = 100;
 
 -(void)cancelAllCountDownTask{
     
-    for (NSString * key in self.countingQueueDict.allKeys) {
+    NSArray * keys = self.countingQueueDict.allKeys;
+
+    for (NSString * key in keys) {
         
         [self.countingQueueDict removeObjectForKey:key];
         
     }
     
-    [self reductionRandPoolWithIndexArray:self.countingQueueDict.allKeys];
+    [self reductionRandPoolWithIndexArray:keys];
     
     
 }
