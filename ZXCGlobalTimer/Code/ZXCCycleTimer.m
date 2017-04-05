@@ -197,7 +197,13 @@ NSInteger randPoolMaxNum = 100;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     @try{
+                        
                         queue.callBack(queue.index);
+                        
+                    }@catch (NSException *exception) {
+                        
+                    } @finally {
+                        
                     }
                     
                 });
@@ -348,7 +354,7 @@ NSInteger randPoolMaxNum = 100;
         ZXCCountDownBlockObj * coutting = obj;
         
         //判断如果block失效,取消任务
-        if(coutting.endBlock){
+        if(!coutting.endBlock){
             
             [needCancalKey addObject:key];
             
@@ -367,7 +373,14 @@ NSInteger randPoolMaxNum = 100;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     @try{
+                        
                         coutting.endBlock();
+                        
+                    }@catch (NSException *exception) {
+                        
+                    } @finally {
+                        
+                        
                     }
                     
                 });
