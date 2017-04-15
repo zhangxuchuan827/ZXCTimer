@@ -22,7 +22,7 @@
 #pragma mark - 循环任务
 
 /**
- 添加事件到轮询队列
+ 添加事件到轮询队列//时间间隔1秒
  
  @param target 控制器
  @param selector 执行方法
@@ -30,14 +30,33 @@
  */
 -(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector;
 
+/**
+ 添加事件到轮询队列
+ 
+ @param timeinteval 时间间隔
+ @param target 控制器
+ @param selector 执行方法
+ @return 队列索引值
+ */
+-(NSInteger)addQueueWithTimeInterval:(NSTimeInterval)timeinteval Target:(id)target selector:(SEL)selector;
+
 
 /**
- 添加回调到轮询队列(block将在主线程中执行)
+ 添加回调到轮询队列(block将在主线程中执行)//时间间隔1秒
  
  @param calBack 轮询回调
  @return 索引值
  */
 -(NSInteger)addQueueWithBlock:(void(^)(NSInteger queueId))calBack;
+
+/**
+ 添加回调到轮询队列(block将在主线程中执行)
+ 
+ @param timeinteval 时间间隔
+ @param calBack 轮询回调
+ @return 索引值
+ */
+-(NSInteger)addQueueWithTimeInterval:(NSTimeInterval)timeinteval Block:(void(^)(NSInteger queueId))calBack;
 
 
 /**

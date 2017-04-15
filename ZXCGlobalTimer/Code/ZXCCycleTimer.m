@@ -98,9 +98,11 @@ static ZXCCycleTimer * shareObj = nil;
  */
 -(void)timerRun{
     
-    
+    //循环
     [self run_cycle];
     
+    
+    //定时
     [self run_counting];
     
     
@@ -166,17 +168,32 @@ NSInteger randPoolMaxNum = 100;
     //轮询队列,若是ZXCQueue类型则执行TargetDo,若是ZXCBlockQueue类型则执行queue.callBack
     [self.cycleQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         
+        //-------判断类型ZXCQueue
+        
         if ([obj isKindOfClass:[ZXCQueue class]] ) {
             
             ZXCQueue * queue = obj;
             
+            
+            //如果还没有到执行时间,就跳过
+            
+            NSDate * currentDate = [NSDate date];
+            
+            if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
+                
+                return ;
+                
+            }
+            
             if ([queue.target respondsToSelector:queue.selector]) {
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-
+                    
                     ((void (*)(id, SEL))[queue.target methodForSelector:queue.selector])(queue.target,queue.selector);
                     
                 });
+                
+                queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
                 
             }else{
                 
@@ -187,10 +204,22 @@ NSInteger randPoolMaxNum = 100;
             
             
         }
+        //-------判断类型ZXCQueue--end
+        
+        //----判断类型ZXCBlockQueue
         
         if ([obj isKindOfClass:[ZXCBlockQueue class]]){
             
             ZXCBlockQueue * queue = obj;
+            
+            //如果还没有到执行时间,就跳过
+            NSDate * currentDate = [NSDate date];
+            
+            if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
+
+                return ;
+                
+            }
             
             if (queue.callBack) {
                 
@@ -202,12 +231,13 @@ NSInteger randPoolMaxNum = 100;
                         
                     }@catch (NSException *exception) {
                         
-                    } @finally {
+                        NSLog(@"%@",exception);
                         
                     }
                     
                 });
                 
+                queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
                 
                 
             }else{
@@ -217,7 +247,11 @@ NSInteger randPoolMaxNum = 100;
                 [self reductionRandPoolWithIndex:queue.index];
             }
             
+            
+            
         }
+        
+        //----判断类型ZXCBlockQueue -end
         
         
     }];
@@ -225,9 +259,9 @@ NSInteger randPoolMaxNum = 100;
     
 }
 
-
--(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector{
-
+-(NSInteger)addQueueWithTimeInterval:(NSTimeInterval)timeinteval Target:(id)target selector:(SEL)selector{
+    
+    
     NSAssert(target, @"执行主体不能为空");
     NSAssert(selector , @"事件不能为空");
     
@@ -276,7 +310,43 @@ NSInteger randPoolMaxNum = 100;
     
     queue.target = weakTarget;
     
+    queue.nextRunDate = [NSDate date];
+    
+    queue.timeInteval = timeinteval;
+    
+    
+    
+    [self.cycleQueueDict setObject:queue forKey:@(index)];
+    
+    return index;
+    
+}
 
+-(NSInteger)addQueueWithTarget:(id)target selector:(SEL)selector{
+
+    
+    
+    return [self addQueueWithTimeInterval:1 Target:target selector:selector];
+    
+}
+
+
+-(NSInteger)addQueueWithTimeInterval:(NSTimeInterval)timeinteval Block:(void(^)(NSInteger queueId))calBack{
+    
+    //添加
+    NSInteger index = [self randNumNotInIndex];
+    
+    
+    ZXCBlockQueue * queue = [ZXCBlockQueue new];
+    
+    queue.timeInteval = timeinteval;
+    
+    queue.index = index;
+    
+    queue.callBack = calBack;
+    
+    queue.nextRunDate = [NSDate date];
+    
     
     [self.cycleQueueDict setObject:queue forKey:@(index)];
     
@@ -286,22 +356,12 @@ NSInteger randPoolMaxNum = 100;
 
 -(NSInteger)addQueueWithBlock:(void(^)(NSInteger queueId))calBack{
     
-    //添加
-    NSInteger index = [self randNumNotInIndex];
     
-    
-    ZXCBlockQueue * queue = [ZXCBlockQueue new];
-    
-    queue.index = index;
-    
-    queue.callBack = calBack;
-    
-    
-    [self.cycleQueueDict setObject:queue forKey:@(index)];
-    
-    return index;
+    return [self addQueueWithTimeInterval:1 Block:calBack];
     
 }
+
+
 -(void)removeQueueByTarget:(id)target{
     
     __weak typeof(target) weakTarget = target;

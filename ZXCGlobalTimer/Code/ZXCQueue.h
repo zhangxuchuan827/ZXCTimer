@@ -36,5 +36,17 @@
 
 
 
+/**
+ 下次执行时间
+ */
+@property (nonatomic,strong) NSDate * nextRunDate;
+
+
+/**
+ 执行时间间隔
+ */
+@property (nonatomic,assign) NSTimeInterval timeInteval;
+
+
 
 @end
