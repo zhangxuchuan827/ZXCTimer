@@ -23,6 +23,12 @@
 
 
 /**
+ 任务名
+ */
+@property (assign,nonatomic) NSString * name;
+
+
+/**
  执行回调,(索引值)
  */
 @property (nonatomic,copy) void(^callBack)(NSInteger index) ;
