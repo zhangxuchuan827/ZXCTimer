@@ -16,13 +16,13 @@
 @interface ZXCCycleTimer ()
 
 //随机数池
-@property (nonatomic,strong) NSMutableArray * randPool;
+@property (atomic,strong ) NSMutableArray * randPool;
 
 //定时任务队列
-@property (nonatomic,strong) NSMutableDictionary * countingQueueDict;
+@property (atomic,strong) NSMutableDictionary * countingQueueDict;
 
 //循环任务队列
-@property (nonatomic,strong) NSMutableDictionary * cycleQueueDict;
+@property (atomic,strong) NSMutableDictionary * cycleQueueDict;
 
 
 @end
@@ -34,6 +34,8 @@
     
     //轮询时间
     NSInteger _timeInterval;
+    
+    NSInteger _maxTaskCount;
     
     //计时器
     NSTimer * _timer;
@@ -64,6 +66,26 @@ static ZXCCycleTimer * shareObj = nil;
     self = [super init];
     if (self) {
         
+        _cycleQueueDict = [NSMutableDictionary new];
+        
+        _countingQueueDict = [NSMutableDictionary new];
+        
+        
+        _maxTaskCount = 100;
+
+        _randPool = [NSMutableArray new];
+        
+        for (int i = 1 ; i < _maxTaskCount; i++) {
+            
+            [_randPool addObject:[NSString stringWithFormat:@"%ld",(long)i]];
+            
+            
+        }
+        
+        //循环时间
+        _timeInterval = 1;
+        
+        
         _aThread = [[NSThread alloc]initWithTarget:self selector:@selector(initial) object:nil];
         
         _aThread.name = @"ZXC-CycleTimer-thread";
@@ -76,8 +98,6 @@ static ZXCCycleTimer * shareObj = nil;
 
 -(void)initial{
     
-    //循环时间
-    _timeInterval = 1;
     
     //初始化定时器
     
@@ -89,6 +109,7 @@ static ZXCCycleTimer * shareObj = nil;
 
 
 }
+
 
 
 
@@ -110,53 +131,6 @@ static ZXCCycleTimer * shareObj = nil;
 }
 
 
-NSInteger randPoolMaxNum = 100;
-
-
--(NSMutableArray*)randPool{
-    
-    if (_randPool == nil) {
-        
-        _randPool  = [[NSMutableArray alloc]init];
-        
-        for (int i = 1 ; i < randPoolMaxNum; i++) {
-            
-            [_randPool addObject:@(i)];
-            
-            
-            
-        }
-    }
-    
-    if (_randPool.count == 0) {
-        
-        [_randPool addObject:@(++randPoolMaxNum)];
-        
-    }
-    
-    return _randPool;
-}
--(NSMutableDictionary*)cycleQueueDict{
-    
-    if (_cycleQueueDict == nil) {
-        
-        _cycleQueueDict  = [[NSMutableDictionary alloc]init];
-        
-    }
-    
-    return _cycleQueueDict;
-}
-
--(NSMutableDictionary*)countingQueueDict{
-    
-    if (_countingQueueDict == nil) {
-        
-        _countingQueueDict  = [[NSMutableDictionary alloc]init];
-        
-    }
-    
-    return _countingQueueDict;
-}
 
 
 
@@ -302,6 +276,9 @@ NSInteger randPoolMaxNum = 100;
     
     NSInteger index = [self randNumNotInIndex];
     
+    //当任务池不够了.就添加任务失败(需要做更多处理)
+    if(index == 0) return 0;
+    
     ZXCQueue * queue = [ZXCQueue new];
     
     queue.index = index;
@@ -316,7 +293,7 @@ NSInteger randPoolMaxNum = 100;
     
     
     
-    [self.cycleQueueDict setObject:queue forKey:@(index)];
+    [self.cycleQueueDict setObject:queue forKey:[NSString stringWithFormat:@"%ld",index]];
     
     return index;
     
@@ -336,6 +313,8 @@ NSInteger randPoolMaxNum = 100;
     //添加
     NSInteger index = [self randNumNotInIndex];
     
+    //当任务池不够了.就添加任务失败(需要做更多处理)
+    if(index == 0) return 0;
     
     ZXCBlockQueue * queue = [ZXCBlockQueue new];
     
@@ -348,7 +327,7 @@ NSInteger randPoolMaxNum = 100;
     queue.nextRunDate = [NSDate date];
     
     
-    [self.cycleQueueDict setObject:queue forKey:@(index)];
+    [self.cycleQueueDict setObject:queue forKey:[NSString stringWithFormat:@"%ld",index]];
     
     return index;
     
@@ -374,7 +353,7 @@ NSInteger randPoolMaxNum = 100;
             
             if ([queue.target isEqual:weakTarget]) {
                 
-                [self.cycleQueueDict removeObjectForKey:@(queue.index)];
+                [self.cycleQueueDict removeObjectForKey:[NSString stringWithFormat:@"%ld",queue.index]];
                 
                 [self reductionRandPoolWithIndex:queue.index];
                 
@@ -394,7 +373,7 @@ NSInteger randPoolMaxNum = 100;
         return;
     }
     
-    [self.cycleQueueDict removeObjectForKey:@(index)];
+    [self.cycleQueueDict removeObjectForKey:[NSString stringWithFormat:@"%ld",index]];
     
     [self reductionRandPoolWithIndex:index];
     
@@ -490,7 +469,7 @@ NSInteger randPoolMaxNum = 100;
     
     obj.endBlock = endBlock;
     
-    [self.countingQueueDict setObject:obj forKey:@(index)];
+    [self.countingQueueDict setObject:obj forKey:[NSString stringWithFormat:@"%ld",index]];
     
     return index;
     
@@ -500,13 +479,25 @@ NSInteger randPoolMaxNum = 100;
 
 -(void)cancelCountDownWithIndex:(NSInteger)index{
     
-    BOOL result = [self.countingQueueDict.allKeys containsObject:@(index)];
+    BOOL result = [self.countingQueueDict.allKeys containsObject:[NSString stringWithFormat:@"%ld",index]];
     
     if (result) {
         
-        [self.countingQueueDict removeObjectForKey:@(index)];
+        @try {
+            
+            [self.countingQueueDict removeObjectForKey:[NSString stringWithFormat:@"%ld",index]];
+            
+            [self reductionRandPoolWithIndex:index];
+            
+        } @catch (NSException *exception) {
+            
+            NSLog(@"%@",exception);
+            
+        } @finally {
+            
+        }
         
-        [self reductionRandPoolWithIndex:index];
+        
         
     }
     
@@ -538,6 +529,8 @@ NSInteger randPoolMaxNum = 100;
  */
 -(NSInteger)randNumNotInIndex{
     
+    if (self.randPool.count == 0) return 0;
+    
     NSInteger randomIndex =  arc4random()%self.randPool.count;
     
     NSNumber * index = [self.randPool objectAtIndex:randomIndex];
@@ -554,7 +547,7 @@ NSInteger randPoolMaxNum = 100;
  */
 -(void)reductionRandPoolWithIndex:(NSInteger)index{
     
-    [self.randPool addObject:@(index)];
+    [self.randPool addObject:[NSString stringWithFormat:@"%ld",index]];
     
 }
 
