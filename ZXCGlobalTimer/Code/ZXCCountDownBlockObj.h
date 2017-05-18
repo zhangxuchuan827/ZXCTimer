@@ -14,11 +14,16 @@
  */
 @interface ZXCCountDownBlockObj : NSObject
 
+
 /**
  索引值
  */
 @property (nonatomic,assign) NSInteger index;
 
+/**
+ 任务名
+ */
+@property (assign,nonatomic) NSString * name;
 
 /**
  结束回调
