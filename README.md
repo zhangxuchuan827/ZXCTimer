@@ -1,5 +1,9 @@
 # ZXCGlobalTimer
 
+###警告
+
+本插件在多线程读写字典存在问题
+
 ###简介
 
 ZXCGlobalTimer是一个全局的定时计时器,能够一行代码添加定时任务或者轮询任务,并且无需人为管理,控制器或者方法失效时,任务即失效
@@ -8,7 +12,6 @@ ZXCGlobalTimer是一个全局的定时计时器,能够一行代码添加定时�
 
 1.直接将目录下'ZXCGlobalTimer'文件夹引入工程中,并且引入ZXCGlobalTimer.h头文件
 
-2.使用CocoaPods:Pod 'ZXCGlobalTimer'
 
 
 ###方法
