@@ -139,98 +139,114 @@ static ZXCCycleTimer * shareObj = nil;
 
 -(void)run_cycle{
     
-    //轮询队列,若是ZXCQueue类型则执行TargetDo,若是ZXCBlockQueue类型则执行queue.callBack
-    [self.cycleQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+    @synchronized(self){
         
-        //-------判断类型ZXCQueue
-        
-        if ([obj isKindOfClass:[ZXCQueue class]] ) {
-            
-            ZXCQueue * queue = obj;
-            
-            
-            //如果还没有到执行时间,就跳过
-            
-            NSDate * currentDate = [NSDate date];
-            
-            if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
-                
-                return ;
-                
-            }
-            
-            if ([queue.target respondsToSelector:queue.selector]) {
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    ((void (*)(id, SEL))[queue.target methodForSelector:queue.selector])(queue.target,queue.selector);
-                    
-                });
-                
-                queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
-                
-            }else{
-                
-                [self.cycleQueueDict removeObjectForKey:key];
-                
-                [self reductionRandPoolWithIndex:queue.index];
-            }
-            
-            
-        }
-        //-------判断类型ZXCQueue--end
-        
-        //----判断类型ZXCBlockQueue
-        
-        if ([obj isKindOfClass:[ZXCBlockQueue class]]){
-            
-            ZXCBlockQueue * queue = obj;
-            
-            //如果还没有到执行时间,就跳过
-            NSDate * currentDate = [NSDate date];
-            
-            if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
-
-                return ;
-                
-            }
-            
-            if (queue.callBack) {
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    @try{
-                        
-                        queue.callBack(queue.index);
-                        
-                    }@catch (NSException *exception) {
-                        
-                        NSLog(@"%@",exception);
-                        
-                    }
-                    
-                });
-                
-                queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
-                
-                
-            }else{
-                
-                [self.cycleQueueDict removeObjectForKey:key];
-                
-                [self reductionRandPoolWithIndex:queue.index];
-            }
-            
-            
-            
-        }
-        
-        //----判断类型ZXCBlockQueue -end
-        
-        
-    }];
-
+        __block NSMutableDictionary * needCancalKey = [NSMutableDictionary new];
     
+    
+        //轮询队列,若是ZXCQueue类型则执行TargetDo,若是ZXCBlockQueue类型则执行queue.callBack
+        [self.cycleQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            
+            //-------判断类型ZXCQueue
+            
+            if ([obj isKindOfClass:[ZXCQueue class]] ) {
+                
+                ZXCQueue * queue = obj;
+                
+                
+                //如果还没有到执行时间,就跳过
+                
+                NSDate * currentDate = [NSDate date];
+                
+                if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
+                    
+                    return ;
+                    
+                }
+                
+                if ([queue.target respondsToSelector:queue.selector]) {
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        ((void (*)(id, SEL))[queue.target methodForSelector:queue.selector])(queue.target,queue.selector);
+                        
+                    });
+                    
+                    queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
+                    
+                }else{
+                    
+//                    [self.cycleQueueDict removeObjectForKey:key];
+//                    [self reductionRandPoolWithIndex:queue.index];
+                    
+                    [needCancalKey setObject:@(queue.index) forKey:key];
+                }
+                
+                
+            }
+            //-------判断类型ZXCQueue--end
+            
+            //----判断类型ZXCBlockQueue
+            
+            if ([obj isKindOfClass:[ZXCBlockQueue class]]){
+                
+                ZXCBlockQueue * queue = obj;
+                
+                //如果还没有到执行时间,就跳过
+                NSDate * currentDate = [NSDate date];
+                
+                if ([queue.nextRunDate compare:currentDate] != NSOrderedAscending) {
+
+                    return ;
+                    
+                }
+                
+                if (queue.callBack) {
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        @try{
+                            
+                            queue.callBack(queue.index);
+                            
+                        }@catch (NSException *exception) {
+                            
+                            NSLog(@"ZXCDlobalTimer - ERROR: %@",exception);
+                            
+                        }
+                        
+                    });
+                    
+                    queue.nextRunDate = [[NSDate alloc] initWithTimeIntervalSinceNow:queue.timeInteval];
+                    
+                    
+                }else{
+                    
+//                    [self.cycleQueueDict removeObjectForKey:key];
+//                    [self reductionRandPoolWithIndex:queue.index];
+                    [needCancalKey setObject:@(queue.index) forKey:key];
+                    
+                }
+                
+                
+                
+            }
+            
+            //----判断类型ZXCBlockQueue -end
+            
+            
+        }];
+
+        
+        [needCancalKey enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber * obj, BOOL * _Nonnull stop) {
+            
+            [self.cycleQueueDict removeObjectForKey:key];
+            [self reductionRandPoolWithIndex:obj.integerValue];
+            
+        }];
+
+        
+    }
 }
 
 -(NSInteger)addQueueWithTimeInterval:(NSTimeInterval)timeinteval Target:(id)target selector:(SEL)selector{
@@ -345,26 +361,26 @@ static ZXCCycleTimer * shareObj = nil;
     
     __weak typeof(target) weakTarget = target;
     
-    [self.cycleQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        
-        if ([obj isKindOfClass:[ZXCQueue class]]) {
+    @synchronized(self){
+    
+        [self.cycleQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             
-            ZXCQueue * queue = obj;
-            
-            if ([queue.target isEqual:weakTarget]) {
+            if ([obj isKindOfClass:[ZXCQueue class]]) {
                 
-                [self.cycleQueueDict removeObjectForKey:[NSString stringWithFormat:@"%ld",queue.index]];
+                ZXCQueue * queue = obj;
                 
-                [self reductionRandPoolWithIndex:queue.index];
+                if ([queue.target isEqual:weakTarget]) {
+                    
+                    [self.cycleQueueDict removeObjectForKey:[NSString stringWithFormat:@"%ld",queue.index]];
+                    
+                    [self reductionRandPoolWithIndex:queue.index];
+                    
+                }
                 
             }
             
-        }
-        
-
-        
-    }];
-    
+        }];
+    }
     
 }
 -(void)removeByIndex:(NSInteger)index{
@@ -384,73 +400,78 @@ static ZXCCycleTimer * shareObj = nil;
 
 -(void)run_counting{
     
-    __block NSMutableArray * needCancalKey = [NSMutableArray new];
+    @synchronized(self){
     
-    [self.countingQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        //
+        __block NSMutableArray * needCancalKey = [NSMutableArray new];
         
-            
-        ZXCCountDownBlockObj * coutting = obj;
-        
-        //判断如果block失效,取消任务
-        if(!coutting.endBlock){
-            
-            [needCancalKey addObject:key];
+        [self.countingQueueDict enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            //
             
             
-        }else{
-        
-            //判断如果当前的时间大于或等于结束时间
+            ZXCCountDownBlockObj * coutting = obj;
             
-            NSDate * currentDate = [NSDate date];
-            NSDate * endDate = coutting.endDate;
-            //判断时间
-            if([currentDate compare:endDate] == NSOrderedSame || [currentDate compare:endDate] == NSOrderedDescending){
-                
-                //执行目标的block
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    @try{
-                        
-                        coutting.endBlock();
-                        
-                    }@catch (NSException *exception) {
-                        
-                    } @finally {
-                        
-                        
-                    }
-                    
-                });
-                    
-                
-                
-                //添加到待取消任务数组--无论执行成功与否,到时就取消
+            //判断如果block失效,取消任务
+            if(!coutting.endBlock){
                 
                 [needCancalKey addObject:key];
                 
                 
-            }
+            }else{
+            
+                //判断如果当前的时间大于或等于结束时间
                 
+                NSDate * currentDate = [NSDate date];
+                NSDate * endDate = coutting.endDate;
+                //判断时间
+                if([currentDate compare:endDate] == NSOrderedSame || [currentDate compare:endDate] == NSOrderedDescending){
+                    
+                    //执行目标的block
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        @try{
+                            
+                            coutting.endBlock();
+                            
+                        }@catch (NSException *exception) {
+                            
+                        } @finally {
+                            
+                            
+                        }
+                        
+                    });
+                    
+                    
+                    
+                    //添加到待取消任务数组--无论执行成功与否,到时就取消
+                    
+                    [needCancalKey addObject:key];
+                    
+                    
+                }
+                
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        }];
+        
+        
+        for (NSString * key in needCancalKey) {
+            
+            [self cancelCountDownWithIndex:[key integerValue]];
+            
+            [self reductionRandPoolWithIndex:key.integerValue];
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-    }];
-    
-    
-    for (NSString * key in needCancalKey) {
-        
-        [self cancelCountDownWithIndex:[key integerValue]];
-        
-        [self reductionRandPoolWithIndex:key.integerValue];
     }
     
 }
