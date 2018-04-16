@@ -7,11 +7,15 @@
 //
 
 #import "ViewController.h"
-
-#import "ZXCGlobalTimer.h"
+#import "SecondViewController.h"
+#import "ZXCTimer.h"
 
 
 @interface ViewController ()
+
+@property (weak, nonatomic) IBOutlet UITextField *timeTF;
+@property (weak, nonatomic) IBOutlet UITextField *contentTF;
+
 
 @end
 
@@ -20,122 +24,65 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    //添加轮询队列
-    
-    NSInteger index = [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test1)];
-    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(pushPage)];
 
-    
-//    [[ZXCCycleTimer shareInstance] addQueueWithBlock:^(NSInteger queueId) {
-//        
-//        NSLog(@"定时器调用了block,当前索引值:%ld",queueId);
-//        
-//    }];
-    
-    //移除循环
-    [[ZXCCycleTimer shareInstance]removeByIndex:index];
-    
-    [[ZXCCycleTimer shareInstance]removeQueueByTarget:self];
-    
-    
-    [[ZXCCycleTimer shareInstance] addQueueWithTimeInterval:10 Target:self selector:@selector(test4)];
-    
-    [[ZXCCycleTimer shareInstance]addQueueWithTimeInterval:5 Block:^(NSInteger queueId) {
-        
-        [self test5];
-        
-    }];
-    
-    [[ZXCCycleTimer shareInstance]addQueueWithBlock:^(NSInteger queueId) {
-       
-        [self test6];
-        
-    }];
-    
-    
-    
-    //定时器调用
-    
-    
-    NSInteger index2 = [[ZXCCycleTimer shareInstance] addCountDownWithTimeInterval:10 endBlock:^() {
-    
-        NSLog(@"十秒钟吼执行了这个时间");
-        
-    }];
-    
-//    //取消该任务
-//    [[ZXCCycleTimer shareInstance]cancelCountDownWithIndex:index2];
-//    
-//    [[ZXCCycleTimer shareInstance]cancelAllCountDownTask];
-    
-    
+    [self.view endEditing:YES];
 }
 
-
-
--(void)test1{
+-(void)pushPage{
     
-    //NSLog(@"定时器调用了test1");
-    
+    [self.navigationController pushViewController:[[SecondViewController alloc]init] animated:YES];
 }
-
--(void)test2_WithParam:(NSString *)str{
-    
-    //NSLog(@"定时器调用了test2\n参数:%@",str);
-    
-}
--(void)test3_WithParam:(NSString *)str Param2:(NSString *)str2{
-    
-    //NSLog(@"定时器调用了test3\n参数1:%@\n参数2:%@",str,str2);
-    
-}
-
-
--(void)test4{
-    
-    NSLog(@"每隔10秒调用一次\n%ld",time(NULL));
-    
-    
-}
-
--(void)test5{
-    
-    NSLog(@"每隔5秒调用一次\n%ld",time(NULL));
-    
-    
-}
--(void)test6{
-    
-    
-    
-    NSLog(@"每隔1秒调用一次\n%ld",time(NULL));
-    
-    
-}
-
 
 /************************************/
 
 
-- (IBAction)add:(id)sender {
+- (IBAction)addTimer:(id)sender {
     
-    [[ZXCCycleTimer shareInstance] addQueueWithTarget:self selector:@selector(test1)];
+    if (self.timeTF.text.length == 0 || self.contentTF.text.length == 0) {
+        return;
+    }
     
-
+    NSString * content = self.contentTF.text.mutableCopy;
+    
+    [[ZXCTimer shareInstance] addTimerTask:^{
+        NSLog(@"循环任务:%@",content);
+    } after:self.timeTF.text.floatValue threadMode:ZXCBackgroundThread];
+    
+    self.timeTF.text = @"";
+    self.contentTF.text = @"";
     
 }
 
-- (IBAction)delete:(id)sender {
+
+- (IBAction)addCycle:(id)sender {
+    if (self.timeTF.text.length == 0 || self.contentTF.text.length == 0) {
+        return;
+    }
+
+    NSString * content = self.contentTF.text.mutableCopy;
+    [[ZXCTimer shareInstance]addCycleTask:^{
+        NSLog(@"定时任务:%@",content);
+        
+    } timeInterval:self.timeTF.text.floatValue];
     
-    [[ZXCCycleTimer shareInstance]removeQueueByTarget:self];
+    self.timeTF.text = @"";
+    self.contentTF.text = @"";
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+- (IBAction)deleteAll:(id)sender {
+
+    
+    [[ZXCTimer shareInstance] removeAllCycleTask];
+    [[ZXCTimer shareInstance] removeAllTimerTask];
 }
 
+
+-(void)dealloc{
+    
+    NSLog(@"Dealloc - %@",self.class);
+}
 
 @end
