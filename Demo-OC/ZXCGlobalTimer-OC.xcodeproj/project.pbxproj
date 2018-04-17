@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27CAC1CC207F574C009C80F4 /* ZXCQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 27CAC1CB207F574C009C80F4 /* ZXCQueueItem.m */; };
+		275521992085A09D00DD961E /* NSObject+ZXCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 275521932085A09D00DD961E /* NSObject+ZXCTimer.m */; };
+		2755219A2085A09D00DD961E /* ZXCQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 275521942085A09D00DD961E /* ZXCQueueItem.m */; };
+		2755219B2085A09D00DD961E /* ZXCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 275521982085A09D00DD961E /* ZXCTimer.m */; };
 		27F3068F2084496100825736 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F3068E2084496100825736 /* SecondViewController.m */; };
-		27F306922084896500825736 /* NSObject+ZXCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F306912084896500825736 /* NSObject+ZXCTimer.m */; };
 		C7E8A7FA1E5EE650001E1CFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A7F91E5EE650001E1CFC /* main.m */; };
 		C7E8A7FD1E5EE650001E1CFC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A7FC1E5EE650001E1CFC /* AppDelegate.m */; };
 		C7E8A8001E5EE650001E1CFC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A7FF1E5EE650001E1CFC /* ViewController.m */; };
@@ -17,7 +18,6 @@
 		C7E8A8051E5EE650001E1CFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7E8A8041E5EE650001E1CFC /* Assets.xcassets */; };
 		C7E8A8081E5EE650001E1CFC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7E8A8061E5EE650001E1CFC /* LaunchScreen.storyboard */; };
 		C7E8A8131E5EE651001E1CFC /* Demo_OCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8121E5EE651001E1CFC /* Demo_OCTests.m */; };
-		C7E8A8481E5EEC12001E1CFC /* ZXCTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = C7E8A8421E5EEC12001E1CFC /* ZXCTimer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,12 +31,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		27CAC1CA207F574C009C80F4 /* ZXCQueueItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZXCQueueItem.h; sourceTree = "<group>"; };
-		27CAC1CB207F574C009C80F4 /* ZXCQueueItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZXCQueueItem.m; sourceTree = "<group>"; };
+		275521932085A09D00DD961E /* NSObject+ZXCTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ZXCTimer.m"; sourceTree = "<group>"; };
+		275521942085A09D00DD961E /* ZXCQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCQueueItem.m; sourceTree = "<group>"; };
+		275521952085A09D00DD961E /* NSObject+ZXCTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ZXCTimer.h"; sourceTree = "<group>"; };
+		275521962085A09D00DD961E /* ZXCQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCQueueItem.h; sourceTree = "<group>"; };
+		275521972085A09D00DD961E /* ZXCTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCTimer.h; sourceTree = "<group>"; };
+		275521982085A09D00DD961E /* ZXCTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCTimer.m; sourceTree = "<group>"; };
 		27F3068D2084496100825736 /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
 		27F3068E2084496100825736 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
-		27F306902084896500825736 /* NSObject+ZXCTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+ZXCTimer.h"; sourceTree = "<group>"; };
-		27F306912084896500825736 /* NSObject+ZXCTimer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ZXCTimer.m"; sourceTree = "<group>"; };
 		C7E8A7F51E5EE650001E1CFC /* ZXCGlobalTimer-OC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ZXCGlobalTimer-OC.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7E8A7F91E5EE650001E1CFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C7E8A7FB1E5EE650001E1CFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -50,8 +52,6 @@
 		C7E8A80E1E5EE651001E1CFC /* ZXCGlobalTimer-OCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ZXCGlobalTimer-OCTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7E8A8121E5EE651001E1CFC /* Demo_OCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Demo_OCTests.m; sourceTree = "<group>"; };
 		C7E8A8141E5EE651001E1CFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C7E8A8411E5EEC12001E1CFC /* ZXCTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCTimer.h; sourceTree = "<group>"; };
-		C7E8A8421E5EEC12001E1CFC /* ZXCTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCTimer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,23 +129,15 @@
 		C7E8A83B1E5EEC12001E1CFC /* ZXCGlobalTimer */ = {
 			isa = PBXGroup;
 			children = (
-				C7E8A83C1E5EEC12001E1CFC /* Code */,
+				275521952085A09D00DD961E /* NSObject+ZXCTimer.h */,
+				275521932085A09D00DD961E /* NSObject+ZXCTimer.m */,
+				275521962085A09D00DD961E /* ZXCQueueItem.h */,
+				275521942085A09D00DD961E /* ZXCQueueItem.m */,
+				275521972085A09D00DD961E /* ZXCTimer.h */,
+				275521982085A09D00DD961E /* ZXCTimer.m */,
 			);
 			name = ZXCGlobalTimer;
 			path = ../ZXCGlobalTimer;
-			sourceTree = "<group>";
-		};
-		C7E8A83C1E5EEC12001E1CFC /* Code */ = {
-			isa = PBXGroup;
-			children = (
-				27F306902084896500825736 /* NSObject+ZXCTimer.h */,
-				27F306912084896500825736 /* NSObject+ZXCTimer.m */,
-				27CAC1CA207F574C009C80F4 /* ZXCQueueItem.h */,
-				27CAC1CB207F574C009C80F4 /* ZXCQueueItem.m */,
-				C7E8A8411E5EEC12001E1CFC /* ZXCTimer.h */,
-				C7E8A8421E5EEC12001E1CFC /* ZXCTimer.m */,
-			);
-			path = Code;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,13 +243,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2755219A2085A09D00DD961E /* ZXCQueueItem.m in Sources */,
 				27F3068F2084496100825736 /* SecondViewController.m in Sources */,
-				27F306922084896500825736 /* NSObject+ZXCTimer.m in Sources */,
-				27CAC1CC207F574C009C80F4 /* ZXCQueueItem.m in Sources */,
+				2755219B2085A09D00DD961E /* ZXCTimer.m in Sources */,
 				C7E8A8001E5EE650001E1CFC /* ViewController.m in Sources */,
 				C7E8A7FD1E5EE650001E1CFC /* AppDelegate.m in Sources */,
-				C7E8A8481E5EEC12001E1CFC /* ZXCTimer.m in Sources */,
 				C7E8A7FA1E5EE650001E1CFC /* main.m in Sources */,
+				275521992085A09D00DD961E /* NSObject+ZXCTimer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
