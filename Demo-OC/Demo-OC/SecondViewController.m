@@ -67,7 +67,7 @@
     [self addCycleTask:^{
         NSLog(@"[%@]当前是十秒一次的循环任务 - %ldPage",[NSThread currentThread],index);
         
-        for (int i = 0; i < 10000; i ++) {
+        for (int i = 0; i < 1000; i ++) {
             NSLog(@"这里是在后太输出10000个数字 -- %d",i);
         }
     } timeInterval:1 threadMode:ZXCBackgroundThread];
@@ -77,7 +77,12 @@
 
 -(void)secondPagePrint{
     
-    NSLog(@"第二页面信息打印-%@",[NSDate date]);
+    NSURLSessionTask * task = [[NSURLSession sharedSession]dataTaskWithURL:[NSURL URLWithString:@""] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        
+        
+    }];
+    [task resume];
 }
 
 
